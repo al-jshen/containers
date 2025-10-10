@@ -3,3 +3,5 @@ adguardhome/conf
 adguardhome/work
 trillium/trillium-data
 .env
+caddy/config
+caddy/data
