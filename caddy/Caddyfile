@@ -1,0 +1,16 @@
+{
+    email {$ACME_EMAIL}
+}
+
+home.jshen.net {
+    encode gzip
+    reverse_proxy homeassistant:8123
+
+    tls {
+        issuer acme {
+            dns cloudflare {$CLOUDFLARE_API_TOKEN}
+            disable_http_challenge
+            disable_tlsalpn_challenge
+        }
+    }
+}
