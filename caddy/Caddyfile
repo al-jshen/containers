@@ -25,3 +25,15 @@ trillium.jshen.net {
 	}
     }
 }
+
+paperless.jshen.net {
+    encode gzip
+    reverse_proxy paperless-webserver-1:8000
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}

@@ -56,6 +56,9 @@ services:
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
+    networks:
+      - caddy
+      - default
 
 volumes:
   data:
@@ -64,6 +67,8 @@ volumes:
   redisdata:
 
 networks:
-  defaults:
+  caddy:
     name: caddy_net
     external: true
+  default:
+    name: paperless
