@@ -1,6 +1,7 @@
 services:
   caddy:
     build: .
+    container_name: caddy
     restart: unless-stopped
     ports:
       - 80:80
@@ -12,12 +13,8 @@ services:
       - ./data:/data
       - ./config:/config
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - caddy
 
 networks:
-  caddy:
-    driver: overlay
+  default:
+    name: caddy_net
     external: true

@@ -5,12 +5,23 @@
 home.jshen.net {
     encode gzip
     reverse_proxy homeassistant:8123
-
     tls {
-        issuer acme {
-            dns cloudflare {$CLOUDFLARE_API_TOKEN}
-            disable_http_challenge
-            disable_tlsalpn_challenge
-        }
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
+
+trillium.jshen.net {
+    encode gzip
+    reverse_proxy trillium:8080
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
     }
 }
