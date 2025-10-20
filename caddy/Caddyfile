@@ -37,3 +37,15 @@ paperless.jshen.net {
 	}
     }
 }
+
+adguard.jshen.net {
+    encode gzip
+    reverse_proxy adguardhome:8090
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}

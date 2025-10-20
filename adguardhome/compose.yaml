@@ -8,7 +8,7 @@ services:
       - "53:53/udp"
       - "67:67/udp"
       - "68:68/udp"
-      - "8090:8090/tcp" # admin panel
+      # - "8090:8090/tcp" # admin panel
       # - "443:443/tcp"
       # - "443:443/udp"
       - "3000:3000/tcp" # initial installation
@@ -21,3 +21,8 @@ services:
     volumes:
       - /home/mushy/containers/adguardhome/work:/opt/adguardhome/work
       - /home/mushy/containers/adguardhome/conf:/opt/adguardhome/conf
+
+networks:
+  default:
+    name: caddy_net
+    external: true
