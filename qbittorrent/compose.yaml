@@ -1,0 +1,45 @@
+services:
+  gluetun:
+    container_name: gluetun
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    env_file: .gluetun_env
+    restart: unless-stopped
+    ports: 
+      # gluetun control server
+      # - 8000:8000/tcp
+      ### these are ports for the qbittorrent container connected to gluetun
+      # - 8990:8990 # web ui # handled by caddy
+      - 6881:6881
+      - 6881:6881/udp
+    networks:
+      - caddy
+      - default
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    env_file: .qbittorrent_env
+    volumes:
+      - ./qbittorrent_config:/config
+      - ./downloads:/downloads 
+      - ./incomplete:/incomplete
+    network_mode: "service:gluetun"
+    restart: unless-stopped
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 65536  # Increases allowed open files (important for high-speed torrenting)
+
+networks:
+  caddy:
+    name: caddy_net
+    external: true
+  default:
+    name: gluetun_net

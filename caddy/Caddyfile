@@ -49,3 +49,15 @@ adguard.jshen.net {
 	}
     }
 }
+
+qbittorrent.jshen.net {
+    encode gzip
+    reverse_proxy gluetun:8990
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
