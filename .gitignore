@@ -11,3 +11,5 @@ qbittorrent/.*
 qbittorrent/downloads
 qbittorrent/incomplete
 qbittorrent/qbittorrent_config
+jellyfin/config
+jellyfin/cache
