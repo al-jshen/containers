@@ -4,7 +4,6 @@ services:
     container_name: jellyfin
     ports:
       - 10000:8096/tcp # web portal
-      # - 10000:8920/tcp # 8920 is jellyfin https, 10000 is tailscale funnel allowed port
       # - 7359:7359/udp # client discovery, dont need it
     volumes:
       - ./config:/config
