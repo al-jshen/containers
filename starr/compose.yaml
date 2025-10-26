@@ -1,0 +1,82 @@
+services:
+  radarr:
+    container_name: radarr
+    hostname: radarr.internal
+    image: ghcr.io/hotio/radarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    # ports:
+    #   - 7878:7878
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/radarr:/config
+      - /data:/data
+    networks:
+      - caddy
+  sonarr:
+    container_name: sonarr
+    hostname: sonarr.internal
+    image: ghcr.io/hotio/sonarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    # ports:
+    #   - 8989:8989
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/sonarr:/config
+      - /data:/data
+    networks:
+      - caddy
+  bazarr:
+    container_name: bazarr
+    hostname: bazarr.internal
+    image: ghcr.io/hotio/bazarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    # ports:
+    #   - 6767:6767
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/bazarr:/config
+      - /data/media:/data/media
+    networks:
+      - caddy
+  prowlarr:
+    container_name: prowlarr
+    hostname: prowlarr.internal
+    image: ghcr.io/hotio/prowlarr
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    # ports:
+    #   - 9696:9696
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/prowlarr:/config
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy_net
+    external: true
