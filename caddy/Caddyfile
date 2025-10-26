@@ -61,3 +61,51 @@ qbittorrent.jshen.net {
 	}
     }
 }
+
+radarr.jshen.net {
+    encode gzip
+    reverse_proxy radarr:7878
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
+
+sonarr.jshen.net {
+    encode gzip
+    reverse_proxy radarr:8989
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
+
+bazarr.jshen.net {
+    encode gzip
+    reverse_proxy bazarr:6767
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
+
+prowlarr.jshen.net {
+    encode gzip
+    reverse_proxy prowlarr:9696
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
