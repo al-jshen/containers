@@ -76,7 +76,7 @@ radarr.jshen.net {
 
 sonarr.jshen.net {
     encode gzip
-    reverse_proxy radarr:8989
+    reverse_proxy sonarr:8989
     tls {
 	issuer acme {
 		dns cloudflare {$CLOUDFLARE_API_TOKEN}
