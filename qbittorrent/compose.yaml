@@ -25,8 +25,7 @@ services:
     env_file: .qbittorrent_env
     volumes:
       - ./qbittorrent_config:/config
-      - ./downloads:/downloads 
-      - ./incomplete:/incomplete
+      - /data/torrents/:/data/torrents/ 
     network_mode: "service:gluetun"
     restart: unless-stopped
     depends_on:
