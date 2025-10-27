@@ -16,5 +16,10 @@ services:
         target: /usr/local/share/fonts/custom
         read_only: true
     restart: 'unless-stopped'
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy_net
+    external: true
