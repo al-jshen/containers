@@ -109,3 +109,15 @@ prowlarr.jshen.net {
 	}
     }
 }
+
+jellyseerr.jshen.net {
+    encode gzip
+    reverse_proxy jellyseerr:5055
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
