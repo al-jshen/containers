@@ -16,6 +16,9 @@ services:
         target: /usr/local/share/fonts/custom
         read_only: true
     restart: 'unless-stopped'
+    # for HW acceleration
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     networks:
       - caddy
 
