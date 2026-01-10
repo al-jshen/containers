@@ -38,9 +38,9 @@ paperless.jshen.net {
     }
 }
 
-adguard.jshen.net {
+dozzle.jshen.net {
     encode gzip
-    reverse_proxy adguardhome:8090
+    reverse_proxy dozzle:8080
     tls {
 	issuer acme {
 		dns cloudflare {$CLOUDFLARE_API_TOKEN}
