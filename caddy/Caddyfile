@@ -121,3 +121,7 @@ jellyseerr.jshen.net {
 	}
     }
 }
+
+:9090 {
+	respond "Hello from substrate!"
+}
