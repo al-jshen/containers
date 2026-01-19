@@ -1,9 +1,7 @@
-homeassistant/config
 adguardhome/conf
 adguardhome/work
 trillium/trillium-data
 .env
-caddy/config
 caddy/data
 *.env
 paperless-ngx/docker-compose.env
@@ -11,7 +9,7 @@ qbittorrent/.*
 qbittorrent/downloads
 qbittorrent/incomplete
 qbittorrent/qbittorrent_config
-jellyfin/config
 jellyfin/cache
 jellyfin/index.html
 invidious
+*/config
