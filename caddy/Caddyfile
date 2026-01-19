@@ -4,7 +4,7 @@
 
 print.jshen.net {
     encode gzip
-    reverse_proxy orcaslicer:3000
+    reverse_proxy bambustudio:3000
     tls {
 	issuer acme {
 		dns cloudflare {$CLOUDFLARE_API_TOKEN}

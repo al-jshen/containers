@@ -1,17 +1,18 @@
 services:
-  orcaslicer:
-    image: lscr.io/linuxserver/orcaslicer:latest
-    container_name: orcaslicer
+  bambustudio:
+    image: lscr.io/linuxserver/bambustudio:latest
+    container_name: bambustudio
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
-    # ports:
-    #   - "3000:3000"
-    #   - "3001:3001"
+      - DARK_MODE=true #optional
     volumes:
       - ./config:/config
-    shm_size: "1gb"   # optional
+    # ports:
+    #   - 3000:3000
+    #   - 3001:3001
+    shm_size: "1gb"
     restart: unless-stopped
     networks:
       - caddy
