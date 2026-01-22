@@ -12,6 +12,8 @@ services:
     # ports:
     #   - 3000:3000
     #   - 3001:3001
+    devices:
+      - /dev/dri:/dev/dri
     shm_size: "1gb"
     restart: unless-stopped
     networks:
