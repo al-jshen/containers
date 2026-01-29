@@ -2,17 +2,17 @@
     email {$ACME_EMAIL}
 }
 
-# vw.jshen.net {
-#     encode gzip
-#     reverse_proxy vaultwarden:80
-#     tls {
-# 	issuer acme {
-# 		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-# 		disable_http_challenge
-# 		disable_tlsalpn_challenge
-# 	}
-#     }
-# }
+share.jshen.net {
+    encode gzip
+    reverse_proxy pingvin-share:3000
+    tls {
+	issuer acme {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		disable_http_challenge
+		disable_tlsalpn_challenge
+	}
+    }
+}
 
 print.jshen.net {
     encode gzip
