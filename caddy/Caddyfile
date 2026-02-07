@@ -86,7 +86,7 @@ qbittorrent.jshen.net {
     }
 }
 
-radarr.jshen.net {
+movies.jshen.net {
     encode gzip
     reverse_proxy radarr:7878
     tls {
@@ -98,7 +98,7 @@ radarr.jshen.net {
     }
 }
 
-sonarr.jshen.net {
+tv.jshen.net {
     encode gzip
     reverse_proxy sonarr:8989
     tls {
