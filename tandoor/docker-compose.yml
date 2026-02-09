@@ -1,0 +1,33 @@
+services:
+  db_recipes:
+    container_name: tandoor_db
+    restart: always
+    image: postgres:16-alpine
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+
+  web_recipes:
+    container_name: tandoor
+    restart: always
+    image: vabene1111/recipes
+    env_file:
+      - ./.env
+    ports:
+      - 8764:80
+    volumes:
+      - staticfiles:/opt/recipes/staticfiles
+      - ./mediafiles:/opt/recipes/mediafiles
+    depends_on:
+      - db_recipes
+#     networks:
+#       - caddy
+#
+# networks:
+#   caddy:
+#     name: caddy_net
+#     external: true
+
+volumes:
+  staticfiles:

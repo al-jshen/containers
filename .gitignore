@@ -15,3 +15,5 @@ invidious
 */config
 vaultwarden/vw-data
 pingvin-share/data
+tandoor/mediafiles/
+tandoor/postgresql/
