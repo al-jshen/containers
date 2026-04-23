@@ -5,6 +5,7 @@ trillium/trillium-data
 caddy/data
 *.env
 paperless-ngx/docker-compose.env
+paperless-ngx/export
 qbittorrent/.*
 qbittorrent/downloads
 qbittorrent/incomplete
