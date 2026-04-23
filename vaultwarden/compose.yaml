@@ -11,7 +11,35 @@ services:
       - 8000:80
 #     networks:
 #       - caddy
-#
+
+  vaultwarden-backup:
+    image: bruceforce/vaultwarden-backup:latest
+    container_name: vaultwarden-backup
+    restart: always
+    volumes_from:
+      - vaultwarden
+    volumes:
+      - /external/backups/vaultwarden:/backup
+    environment:
+      - CRON_TIME=0 0 * * *        # daily at 2 AM
+      - TIMESTAMP=true
+      - DELETE_AFTER=30             # keep 30 days
+      - BACKUP_DIR=/backup
+      - TZ=America/New_York
+
+
+# to reload from backup:
+# 1. Stop vaultwarden:
+# docker compose down
+# 2. Delete the existing SQLite files (important — stale WAL files can cause corruption):
+# rm /var/lib/docker/volumes/vw-data/_data/db.sqlite3*
+# 3. Extract the backup:
+# tar -xJvf /mnt/backup-disk/vaultwarden/vw-backup-20260423.tar.xz \
+#   -C /var/lib/docker/volumes/vw-data/_data/
+# 4. Start vaultwarden back up:
+# docker compose up -d
+
+
 # networks:
 #   caddy:
 #     name: caddy_net

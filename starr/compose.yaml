@@ -15,8 +15,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /docker/appdata/radarr:/config
-      - /data:/data
-      - /external:/external
+      - /external/data:/data
     networks:
       - caddy
   sonarr:
@@ -35,8 +34,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /docker/appdata/sonarr:/config
-      - /data:/data
-      - /external:/external
+      - /external/data:/data
     networks:
       - caddy
   bazarr:
@@ -55,8 +53,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /docker/appdata/bazarr:/config
-      - /data/media:/data/media
-      - /external/media:/external/media
+      - /external/data:/data
     networks:
       - caddy
   prowlarr:

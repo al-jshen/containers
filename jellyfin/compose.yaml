@@ -9,7 +9,7 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - /data/media/:/data/media
+      - /external/data/media/:/data/media
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       - type: bind
         source: ./fonts
