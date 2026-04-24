@@ -26,6 +26,8 @@ services:
       - DELETE_AFTER=30             # keep 30 days
       - BACKUP_DIR=/backup
       - TZ=America/New_York
+      - UID=1000
+      - GID=1000
 
 
 # to reload from backup:
