@@ -35,7 +35,6 @@ services:
       nofile:
         soft: 32768
         hard: 65536  # Increases allowed open files (important for high-speed torrenting)
-    user: 1000:1000
 
 networks:
   caddy:
