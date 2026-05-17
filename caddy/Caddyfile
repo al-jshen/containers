@@ -2,9 +2,9 @@
     email {$ACME_EMAIL}
 }
 
-recipes.jshen.net {
+photos.jshen.net {
     encode gzip
-    reverse_proxy 172.17.0.1:8764
+    reverse_proxy immich_server:2283
     tls {
 	issuer acme {
 		dns cloudflare {$CLOUDFLARE_API_TOKEN}
