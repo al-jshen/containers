@@ -6,11 +6,11 @@ photos.jshen.net {
     encode gzip
     reverse_proxy immich_server:2283
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -18,11 +18,11 @@ share.jshen.net {
     encode gzip
     reverse_proxy pingvin-share:3000
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -30,11 +30,11 @@ print.jshen.net {
     encode gzip
     reverse_proxy bambustudio:3000
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -42,11 +42,11 @@ home.jshen.net {
     encode gzip
     reverse_proxy homeassistant:8123
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -54,11 +54,11 @@ trillium.jshen.net {
     encode gzip
     reverse_proxy trillium:8080
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -66,11 +66,11 @@ paperless.jshen.net {
     encode gzip
     reverse_proxy paperless-webserver-1:8000
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+    	issuer acme {
+    		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+    		disable_http_challenge
+    		disable_tlsalpn_challenge
+    	}
     }
 }
 
@@ -78,11 +78,11 @@ dozzle.jshen.net {
     encode gzip
     reverse_proxy dozzle:8080
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -90,11 +90,11 @@ qbittorrent.jshen.net {
     encode gzip
     reverse_proxy gluetun:8990
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -102,11 +102,11 @@ movies.jshen.net {
     encode gzip
     reverse_proxy radarr:7878
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -114,11 +114,11 @@ tv.jshen.net {
     encode gzip
     reverse_proxy sonarr:8989
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -126,11 +126,11 @@ bazarr.jshen.net {
     encode gzip
     reverse_proxy bazarr:6767
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -138,11 +138,11 @@ prowlarr.jshen.net {
     encode gzip
     reverse_proxy prowlarr:9696
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
 }
 
@@ -150,12 +150,25 @@ seerr.jshen.net {
     encode gzip
     reverse_proxy seerr:5055
     tls {
-	issuer acme {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
-		disable_http_challenge
-		disable_tlsalpn_challenge
-	}
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
     }
+}
+
+auth.jshen.net {
+    encode gzip
+    reverse_proxy authentik-server-1:9000
+    tls {
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
+    }
+
 }
 
 :9090 {
