@@ -72,5 +72,3 @@ networks:
   caddy:
     name: caddy_net
     external: true
-  default:
-    name: authentik_net

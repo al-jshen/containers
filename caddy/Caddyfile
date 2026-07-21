@@ -100,7 +100,8 @@ qbittorrent.jshen.net {
 
 movies.jshen.net {
     encode gzip
-    reverse_proxy radarr:7878
+    # reverse_proxy radarr:7878
+    reverse_proxy authentik-server-1:9000
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
@@ -112,7 +113,8 @@ movies.jshen.net {
 
 tv.jshen.net {
     encode gzip
-    reverse_proxy sonarr:8989
+    # reverse_proxy sonarr:8989
+    reverse_proxy authentik-server-1:9000
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
@@ -136,7 +138,8 @@ bazarr.jshen.net {
 
 prowlarr.jshen.net {
     encode gzip
-    reverse_proxy prowlarr:9696
+    # reverse_proxy prowlarr:9696
+    reverse_proxy authentik-server-1:9000
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
