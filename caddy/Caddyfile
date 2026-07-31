@@ -38,6 +38,19 @@ print.jshen.net {
     }
 }
 
+games.jshen.net {
+    encode gzip
+    reverse_proxy games_server:8787
+    tls {
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
+    }
+}
+
+
 home.jshen.net {
     encode gzip
     reverse_proxy homeassistant:8123
