@@ -50,6 +50,18 @@ games.jshen.net {
     }
 }
 
+library.jshen.net {
+    encode gzip
+    reverse_proxy calibre:8181
+    tls {
+      issuer acme {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        disable_http_challenge
+        disable_tlsalpn_challenge
+      }
+    }
+}
+
 
 home.jshen.net {
     encode gzip
