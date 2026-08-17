@@ -1,0 +1,288 @@
+# Snapshot of the default "Overview" dashboard.
+#
+# The LIVE copy lives in config/.storage/lovelace.lovelace and is UI-editable,
+# so edits made in the browser will NOT flow back into this file.
+#
+# To re-apply this file over the live dashboard:
+#   docker exec -i homeassistant python3 -c "import yaml,json,sys; \
+#     json.dump({'version':1,'minor_version':1,'key':'lovelace.lovelace', \
+#     'data':{'config':yaml.safe_load(sys.stdin)}}, sys.stdout)" \
+#     < dashboard.yaml > config/.storage/lovelace.lovelace
+#   docker compose restart homeassistant
+#
+# NOTE on storage keys (this is easy to get wrong):
+#   .storage/lovelace.<id>  is a registered dashboard, and it ONLY loads if a
+#                           matching entry exists in .storage/lovelace_dashboards.
+#   .storage/lovelace       is the legacy default key. Dropping a config there and
+#                           restarting makes HA migrate it -> creates the
+#                           lovelace_dashboards entry (id "lovelace") and sets
+#                           frontend.system_data default_panel. That migration has
+#                           already run here, so use lovelace.lovelace from now on.
+#
+# Requires the sensor.total_lamp_power template sensor from config/configuration.yaml.
+
+views:
+  - title: Home
+    path: home
+    icon: mdi:home
+    type: sections
+    max_columns: 2
+    badges:
+      - type: entity
+        entity: weather.forecast_home
+        name: Outside
+        state_content: temperature
+      - type: entity
+        entity: sensor.living_room_ecobee_current_temperature
+        name: Inside
+      - type: entity
+        entity: person.jeff_shen
+        name: Jeff
+      - type: entity
+        entity: person.lindsay
+        name: Lindsay
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Lights & Plugs
+            heading_style: title
+            icon: mdi:lamps
+            badges:
+              - type: entity
+                entity: sensor.total_lamp_power
+                show_name: false
+
+          - type: tile
+            entity: switch.tall_desk_lamp
+            name: Tall Desk Lamp
+            icon: mdi:desk-lamp
+            state_content:
+              - state
+              - last_changed
+            features_position: inline
+            features:
+              - type: toggle
+            grid_options:
+              columns: full
+
+          - type: tile
+            entity: switch.bookshelf_lamp
+            name: Bookshelf Lamp
+            icon: mdi:lamp
+            state_content:
+              - state
+              - last_changed
+            features_position: inline
+            features:
+              - type: toggle
+            grid_options:
+              columns: full
+
+          - type: tile
+            entity: switch.bamboo
+            name: Bamboo
+            state_content:
+              - state
+              - last_changed
+            features_position: inline
+            features:
+              - type: toggle
+            grid_options:
+              columns: full
+
+          - type: button
+            name: All On
+            icon: mdi:lightbulb-on-outline
+            show_state: false
+            tap_action:
+              action: perform-action
+              perform_action: switch.turn_on
+              target:
+                entity_id:
+                  - switch.tall_desk_lamp
+                  - switch.bookshelf_lamp
+                  - switch.bamboo
+            grid_options:
+              columns: 6
+
+          - type: button
+            name: All Off
+            icon: mdi:lightbulb-off-outline
+            show_state: false
+            tap_action:
+              action: perform-action
+              perform_action: switch.turn_off
+              target:
+                entity_id:
+                  - switch.tall_desk_lamp
+                  - switch.bookshelf_lamp
+                  - switch.bamboo
+            grid_options:
+              columns: 6
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Climate
+            heading_style: title
+            icon: mdi:thermostat
+            badges:
+              - type: entity
+                entity: sensor.living_room_ecobee_current_humidity
+                show_name: false
+
+          # "off" MUST stay quoted -- bare off is boolean false in YAML.
+          - type: thermostat
+            entity: climate.living_room_ecobee
+            features:
+              - type: climate-hvac-modes
+                hvac_modes:
+                  - "off"
+                  - heat
+                  - cool
+                  - heat_cool
+            grid_options:
+              columns: full
+
+          - type: tile
+            entity: sensor.living_room_ecobee_current_temperature
+            name: Temperature
+            icon: mdi:thermometer
+            grid_options:
+              columns: 6
+
+          - type: tile
+            entity: sensor.living_room_ecobee_current_humidity
+            name: Humidity
+            icon: mdi:water-percent
+            grid_options:
+              columns: 6
+
+          - type: tile
+            entity: binary_sensor.living_room_ecobee_occupancy
+            name: Occupancy
+            icon: mdi:home-account
+            grid_options:
+              columns: 6
+
+          - type: tile
+            entity: button.living_room_ecobee_clear_hold
+            name: Clear Hold
+            icon: mdi:timer-off-outline
+            tap_action:
+              action: perform-action
+              perform_action: button.press
+              target:
+                entity_id: button.living_room_ecobee_clear_hold
+            grid_options:
+              columns: 6
+
+          # Turn this OFF before adjusting the thermostat at the wall or in the
+          # ecobee app -- otherwise the guard automation reverts your change.
+          - type: tile
+            entity: input_boolean.thermostat_guard
+            name: FlexPower Guard
+            icon: mdi:shield-home
+            features_position: inline
+            features:
+              - type: toggle
+            grid_options:
+              columns: full
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Today
+            heading_style: title
+            icon: mdi:white-balance-sunny
+
+          - type: weather-forecast
+            entity: weather.forecast_home
+            forecast_type: daily
+            show_current: true
+            show_forecast: true
+
+          - type: todo-list
+            entity: todo.shopping_list
+
+  - title: Energy
+    path: energy
+    icon: mdi:lightning-bolt
+    type: sections
+    max_columns: 2
+    badges:
+      - type: entity
+        entity: sensor.total_lamp_power
+        name: Total
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Right Now
+            heading_style: title
+            icon: mdi:flash
+
+          - type: tile
+            entity: sensor.tall_desk_lamp_power
+            name: Tall Desk Lamp
+            icon: mdi:desk-lamp
+            grid_options:
+              columns: 6
+
+          - type: tile
+            entity: sensor.bookshelf_lamp_power
+            name: Bookshelf Lamp
+            icon: mdi:lamp
+            grid_options:
+              columns: 6
+
+          - type: tile
+            entity: sensor.bamboo_power
+            name: Bamboo
+            grid_options:
+              columns: 6
+
+          - type: history-graph
+            title: Last 24 hours
+            hours_to_show: 24
+            entities:
+              - entity: sensor.tall_desk_lamp_power
+                name: Tall Desk Lamp
+              - entity: sensor.bookshelf_lamp_power
+                name: Bookshelf Lamp
+              - entity: sensor.bamboo_power
+                name: Bamboo
+            grid_options:
+              columns: full
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: This Month
+            heading_style: title
+            icon: mdi:calendar-month
+
+          - type: statistic
+            entity: sensor.tall_desk_lamp_summation_delivered
+            name: Tall Desk Lamp
+            stat_type: change
+            period:
+              calendar:
+                period: month
+
+          - type: statistic
+            entity: sensor.bookshelf_lamp_summation_delivered
+            name: Bookshelf Lamp
+            stat_type: change
+            period:
+              calendar:
+                period: month
+
+          - type: statistic
+            entity: sensor.bamboo_summation_delivered
+            name: Bamboo
+            stat_type: change
+            period:
+              calendar:
+                period: month
