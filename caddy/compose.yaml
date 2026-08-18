@@ -13,6 +13,11 @@ services:
       - ./data:/data
       - ./config:/config
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      # pinned so qbittorrent can whitelist this exact address and skip its own
+      # login for requests that already passed authentik
+      default:
+        ipv4_address: 172.20.0.250
 
 networks:
   default:

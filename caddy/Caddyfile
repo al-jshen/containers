@@ -26,18 +26,6 @@ share.jshen.net {
     }
 }
 
-print.jshen.net {
-    encode gzip
-    reverse_proxy bambustudio:3000
-    tls {
-      issuer acme {
-        dns cloudflare {$CLOUDFLARE_API_TOKEN}
-        disable_http_challenge
-        disable_tlsalpn_challenge
-      }
-    }
-}
-
 games.jshen.net {
     encode gzip
     reverse_proxy games_server:8787
@@ -52,7 +40,17 @@ games.jshen.net {
 
 calibre.jshen.net {
     encode gzip
-    reverse_proxy calibre:8080
+    route {
+        reverse_proxy /outpost.goauthentik.io/* authentik-server-1:9000
+
+        forward_auth authentik-server-1:9000 {
+            uri /outpost.goauthentik.io/auth/caddy
+            copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+            trusted_proxies private_ranges
+        }
+
+        reverse_proxy calibre:8080
+    }
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
@@ -64,7 +62,17 @@ calibre.jshen.net {
 
 library.jshen.net {
     encode gzip
-    reverse_proxy calibre:8081
+    route {
+        reverse_proxy /outpost.goauthentik.io/* authentik-server-1:9000
+
+        forward_auth authentik-server-1:9000 {
+            uri /outpost.goauthentik.io/auth/caddy
+            copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+            trusted_proxies private_ranges
+        }
+
+        reverse_proxy calibre:8081
+    }
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
@@ -136,7 +144,18 @@ dozzle.jshen.net {
 
 qbittorrent.jshen.net {
     encode gzip
-    reverse_proxy gluetun:8990
+    route {
+        reverse_proxy /outpost.goauthentik.io/* authentik-server-1:9000
+
+        forward_auth authentik-server-1:9000 {
+            uri /outpost.goauthentik.io/auth/caddy
+            copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+            trusted_proxies private_ranges
+        }
+
+        # the *arrs talk to gluetun:8990 directly, so they bypass this
+        reverse_proxy gluetun:8990
+    }
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
@@ -174,7 +193,17 @@ tv.jshen.net {
 
 bazarr.jshen.net {
     encode gzip
-    reverse_proxy bazarr:6767
+    route {
+        reverse_proxy /outpost.goauthentik.io/* authentik-server-1:9000
+
+        forward_auth authentik-server-1:9000 {
+            uri /outpost.goauthentik.io/auth/caddy
+            copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+            trusted_proxies private_ranges
+        }
+
+        reverse_proxy bazarr:6767
+    }
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
