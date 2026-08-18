@@ -1,0 +1,42 @@
+services:
+  # obsidian_client:
+  #   image: lscr.io/linuxserver/obsidian:latest
+  #   container_name: obsidian_client
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Etc/UTC
+  #   volumes:
+  #     - ./config:/config
+  #   # ports:
+  #   #   - 3000:3000
+  #   #   - 3001:3001
+  #   shm_size: "1gb"
+  #   restart: unless-stopped
+  #   networks:
+  #     - caddy
+
+  # Sync backend for the Self-hosted LiveSync obsidian plugin.
+  couchdb:
+    image: couchdb:3
+    container_name: obsidian_couchdb
+    # run as the image's couchdb uid so the entrypoint skips its chown sweep,
+    # which would otherwise fail on the read-only local.ini and abort the boot
+    user: "5984:5984"
+    env_file:
+      - .env
+    volumes:
+      - ./couchdb/data:/opt/couchdb/data
+      # :ro so the entrypoint does not chown it away from your user
+      - ./couchdb/local.ini:/opt/couchdb/etc/local.ini:ro
+    # ports:
+    #   # local only; the internet-facing side is caddy -> notes-sync.jshen.net
+    #   - 127.0.0.1:5984:5984
+    restart: unless-stopped
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy_net
+    external: true

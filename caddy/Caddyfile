@@ -87,9 +87,8 @@ home.jshen.net {
     }
 }
 
-trillium.jshen.net {
-    encode gzip
-    reverse_proxy trillium:8080
+notes-sync.jshen.net {
+    reverse_proxy obsidian_couchdb:5984
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
