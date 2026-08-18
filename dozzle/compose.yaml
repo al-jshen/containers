@@ -3,6 +3,14 @@ services:
     container_name: dozzle
     restart: unless-stopped
     image: amir20/dozzle:latest
+    environment:
+      # identity comes from authentik's forward auth via caddy; without these
+      # headers dozzle returns 401, so it is not open on the docker network either
+      - DOZZLE_AUTH_PROVIDER=forward-proxy
+      - DOZZLE_AUTH_HEADER_USER=X-authentik-username
+      - DOZZLE_AUTH_HEADER_EMAIL=X-authentik-email
+      - DOZZLE_AUTH_HEADER_NAME=X-authentik-name
+      - DOZZLE_AUTH_LOGOUT_URL=https://dozzle.jshen.net/outpost.goauthentik.io/sign_out
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     # ports:

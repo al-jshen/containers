@@ -112,7 +112,19 @@ paperless.jshen.net {
 
 dozzle.jshen.net {
     encode gzip
-    reverse_proxy dozzle:8080
+    route {
+        # the outpost's own endpoints (callback, sign_out) must reach authentik,
+        # not dozzle, or login just bounces in a loop
+        reverse_proxy /outpost.goauthentik.io/* authentik-server-1:9000
+
+        forward_auth authentik-server-1:9000 {
+            uri /outpost.goauthentik.io/auth/caddy
+            copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+            trusted_proxies private_ranges
+        }
+
+        reverse_proxy dozzle:8080
+    }
     tls {
       issuer acme {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
