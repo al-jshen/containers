@@ -1,0 +1,24 @@
+services:
+  autorestic:
+    image: cupcakearmy/autorestic:1.8.3
+    # stable hostname: restic matches a parent snapshot by host+paths, and
+    # `forget` groups by host. with docker's random per-run hostname, every run
+    # re-read all 5.6gb and landed in its own retention group (never pruned).
+    hostname: substrate
+    env_file: .env
+    volumes:
+      # config, lock file and dumps live here; cache is persisted so each run
+      # doesn't re-read the whole repo index
+      - .:/data
+      - ./cache:/root/.cache/restic
+      # sources are read-only: a bug in here can never write to your data
+      - /home/mushy/containers:/backup/containers:ro
+      - /external/backups:/backup/external:ro
+      - paperless_media:/backup/paperless-media:ro
+      - paperless_data:/backup/paperless-data:ro
+
+volumes:
+  paperless_media:
+    external: true
+  paperless_data:
+    external: true

@@ -1,0 +1,32 @@
+version: 2
+
+backends:
+  b2:
+    type: b2
+    # bucket:path -- create the bucket in b2 first, then put its name here.
+    # credentials and the repo password come from .env, never this file.
+    path: 'substrate-backups:homelab'
+
+locations:
+  homelab:
+    from:
+      - /backup/containers
+      - /backup/external
+      - /backup/paperless-media
+      - /backup/paperless-data
+    to: b2
+    # run forget+prune after each backup so the repo does not grow forever
+    forget: prune
+    options:
+      backup:
+        exclude:
+          # metadata and transcode cache, regenerated on demand
+          - /backup/containers/jellyfin
+          # restic's own cache, and the dumps' temp files
+          - /backup/containers/backups/cache
+          - /backup/containers/backups/logs
+          - '**/*.tmp'
+      forget:
+        keep-daily: 7
+        keep-weekly: 4
+        keep-monthly: 12

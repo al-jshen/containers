@@ -21,3 +21,7 @@ tandoor/postgresql/
 navidrome/data
 games
 notes/couchdb/data
+backups/dumps
+backups/cache
+backups/logs
+backups/.autorestic.lock.yml
