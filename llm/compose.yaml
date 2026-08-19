@@ -1,0 +1,41 @@
+services:
+  vllm-relay:
+    image: alpine/socat
+    container_name: vllm-relay
+    network_mode: host
+    command: TCP-LISTEN:18001,bind=172.17.0.1,fork,reuseaddr TCP:127.0.0.1:18000
+    restart: always
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    volumes:
+      - ./data:/app/backend/data
+    env_file:
+      # OAUTH_CLIENT_ID / OAUTH_CLIENT_SECRET from authentik (gitignored)
+      - .env
+    environment:
+      - OPENAI_API_BASE_URL=http://host.docker.internal:18001/v1
+      # authentik SSO
+      - OAUTH_PROVIDER_NAME=authentik
+      - OPENID_PROVIDER_URL=https://auth.jshen.net/application/o/open-webui/.well-known/openid-configuration
+      - OPENID_REDIRECT_URI=https://chat.jshen.net/oauth/oidc/callback
+      - WEBUI_URL=https://chat.jshen.net
+      - ENABLE_OAUTH_SIGNUP=true
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+      # The login form is deliberately left on as a way back in if authentik is
+      # down. Note it cannot be turned off from here anyway: ui.enable_login_form
+      # is already stored in webui.db and open-webui's persisted config wins over
+      # env. Turn it off in Settings -> Auth once SSO is proven.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - caddy
+    depends_on:
+      - vllm-relay
+    restart: always
+
+networks:
+  caddy:
+    name: caddy_net
+    external: true

@@ -94,6 +94,22 @@ notes-sync.jshen.net {
     }
 }
 
+chat.jshen.net {
+    encode gzip
+    reverse_proxy open-webui:8080
+    tls {
+    	issuer acme {
+    		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+    		disable_http_challenge
+    		disable_tlsalpn_challenge
+    	}
+    }
+    request_body {
+      max_size 100MB
+    }
+}
+
+
 paperless.jshen.net {
     encode gzip
     reverse_proxy paperless-webserver-1:8000

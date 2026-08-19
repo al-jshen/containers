@@ -25,3 +25,4 @@ backups/dumps
 backups/cache
 backups/logs
 backups/.autorestic.lock.yml
+llm/data
