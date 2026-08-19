@@ -1,0 +1,68 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Master switch for the FlexPower setpoint guard automation. Turn this OFF before
+# changing the thermostat at the wall or in the ecobee app, otherwise the
+# automation will read your change as a utility push and revert it.
+input_boolean:
+  thermostat_guard:
+    name: Thermostat Guard
+    icon: mdi:shield-home
+
+# Combined draw of the three smart plugs, shown on the dashboard.
+template:
+  - sensor:
+      - name: Total Lamp Power
+        unique_id: total_lamp_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        state: >
+          {{ (states('sensor.tall_desk_lamp_power') | float(0)
+              + states('sensor.bookshelf_lamp_power') | float(0)
+              + states('sensor.bamboo_power') | float(0)) | round(1) }}
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.20.0.0/16
+    - 127.0.0.1
+    - ::1
+
+# authentik SSO via the hass-oidc-auth custom component (custom_components/auth_oidc).
+# client_id is not a secret: this is a public client using PKCE.
+auth_oidc:
+  client_id: "1e52259b6e0a43b4a6937ba66b90a5d27a99bfc1"
+  discovery_url: "https://auth.jshen.net/application/o/home-assistant/.well-known/openid-configuration"
+  display_name: "authentik"
+  features:
+    # belt-and-braces: `http: trusted_proxies` above already lets HA trust
+    # caddy's X-Forwarded-Proto, this just guarantees the generated callback is
+    # https so it always matches the provider's strict redirect_uri.
+    force_https: true
+    # authentik has no `groups` scope mapping; requesting one would just fail.
+    # add the mapping first if you ever want admin-by-group.
+    include_groups_scope: false
+    # DELIBERATELY OFF. Turning this on links an OIDC login to the HA user with
+    # the same username -- which is how you'd adopt the existing `jshen` user,
+    # but it also bypasses MFA and, with self-signup enabled in authentik, would
+    # let anyone who registers the username `jshen` become HA admin.
+    # OFF by design. It was enabled once, on 2026-08-19, to adopt the existing
+    # `jshen` HA user; that link persists with this disabled. Turning it on
+    # bypasses MFA and lets any matching username adopt its HA account -- with
+    # self-signup open in authentik, that is a takeover path (e.g. `sandy`,
+    # Lindsay's HA username, is not yet claimed in authentik).
+    # Re-enable only for a single deliberate link, then turn it off again.
+    # Both users (jshen, sandy) were linked on 2026-08-19 and those links persist
+    # with this off. Only turn it on for a single deliberate link, then off again
+    # -- and restart HA before the login, since the flag is read at startup.
+    # automatic_user_linking: true

@@ -1,0 +1,47 @@
+# OIDC for home assistant, consumed by the hass-oidc-auth custom component.
+# Public client (PKCE, no secret) as that integration recommends.
+# Apply: docker exec authentik-worker-1 ak apply_blueprint /blueprints/custom/home-assistant-oidc.yaml
+version: 1
+metadata:
+  name: home assistant oidc
+
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: provider-homeassistant
+    identifiers:
+      name: Provider for home-assistant
+    attrs:
+      client_type: public
+      client_id: 1e52259b6e0a43b4a6937ba66b90a5d27a99bfc1
+      sub_mode: hashed_user_id
+      # must be set explicitly: the serializer defaults this to an empty list,
+      # and authentik then rejects the login with "Invalid grant_type for provider".
+      # device_code is not needed -- the mobile flow's code is the integration's
+      # own device-link, the browser still does a normal authorization_code flow.
+      grant_types:
+        - authorization_code
+        - refresh_token
+      access_code_validity: minutes=1
+      access_token_validity: hours=24
+      authorization_flow:
+        !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow:
+        !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+      signing_key:
+        !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      redirect_uris:
+        - url: https://home.jshen.net/auth/oidc/callback
+          matching_mode: strict
+      # named explicitly: there are two 'email' scope mappings (the default and
+      # vaultwarden's), so matching on scope_name would be ambiguous
+      property_mappings:
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+
+  - model: authentik_core.application
+    identifiers:
+      slug: home-assistant
+    attrs:
+      name: home-assistant
+      provider: !KeyOf provider-homeassistant

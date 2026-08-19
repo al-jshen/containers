@@ -1,0 +1,160 @@
+# Self-service signup: username + password, then passkey registration.
+# Accounts are created INACTIVE; the email stage flips them to active once the
+# user clicks the verification link (activate_user_on_success). So verification
+# is the approval step -- an unverified signup can never log in.
+# Requires SMTP: set AUTHENTIK_EMAIL__* in authentik/.env or nothing sends.
+# Apply: docker exec authentik-worker-1 ak apply_blueprint /blueprints/custom/self-enrollment.yaml
+version: 1
+metadata:
+  name: self-service enrollment (password + passkey)
+
+entries:
+  - model: authentik_flows.flow
+    id: flow-enrollment
+    identifiers:
+      slug: enrollment
+    attrs:
+      name: Create an account
+      title: Create an account
+      designation: enrollment
+      authentication: require_unauthenticated
+
+  - model: authentik_core.group
+    id: group-pending
+    identifiers:
+      name: self-enrolled
+    attrs:
+      is_superuser: false
+
+  # --- prompt fields ---
+  - model: authentik_stages_prompt.prompt
+    id: prompt-username
+    identifiers:
+      name: enrollment-field-username
+    attrs:
+      field_key: username
+      label: Username
+      type: username
+      required: true
+      order: 0
+      placeholder: Username
+
+  - model: authentik_stages_prompt.prompt
+    id: prompt-email
+    identifiers:
+      name: enrollment-field-email
+    attrs:
+      field_key: email
+      label: Email
+      type: email
+      required: true
+      order: 1
+      placeholder: Email
+
+  - model: authentik_stages_prompt.prompt
+    id: prompt-password
+    identifiers:
+      name: enrollment-field-password
+    attrs:
+      field_key: password
+      label: Password
+      type: password
+      required: true
+      order: 2
+      placeholder: Password
+
+  - model: authentik_stages_prompt.prompt
+    id: prompt-password-repeat
+    identifiers:
+      name: enrollment-field-password-repeat
+    attrs:
+      field_key: password_repeat
+      label: Password (repeat)
+      type: password
+      required: true
+      order: 3
+      placeholder: Password (repeat)
+
+  # --- stages ---
+  - model: authentik_stages_prompt.promptstage
+    id: stage-enrollment-prompt
+    identifiers:
+      name: enrollment-prompt
+    attrs:
+      fields:
+        - !KeyOf prompt-username
+        - !KeyOf prompt-email
+        - !KeyOf prompt-password
+        - !KeyOf prompt-password-repeat
+
+  - model: authentik_stages_user_write.userwritestage
+    id: stage-enrollment-write
+    identifiers:
+      name: enrollment-user-write
+    attrs:
+      user_creation_mode: always_create
+      create_users_as_inactive: true
+      create_users_group: !KeyOf group-pending
+      user_path_template: users/self-enrolled
+
+
+  - model: authentik_stages_email.emailstage
+    id: stage-enrollment-email
+    identifiers:
+      name: enrollment-email-verification
+    attrs:
+      use_global_settings: true
+      activate_user_on_success: true
+      token_expiry: hours=24
+      subject: Verify your account
+      template: email/account_confirmation.html
+
+  # --- flow ---
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, enrollment]]
+      order: 10
+    attrs:
+      stage: !Find [authentik_flows.stage, [name, enrollment-prompt]]
+
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, enrollment]]
+      order: 20
+    attrs:
+      stage: !Find [authentik_flows.stage, [name, enrollment-user-write]]
+
+  # passkey registration, reusing authentik's built-in webauthn stage.
+  # must come after user_write: it attaches the device to the created user.
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, enrollment]]
+      order: 30
+    attrs:
+      stage: !Find [authentik_flows.stage, [name, default-authenticator-webauthn-setup]]
+
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, enrollment]]
+      order: 40
+    attrs:
+      stage: !Find [authentik_flows.stage, [name, enrollment-email-verification]]
+
+  # puts the "Sign up" link on the login page.
+  # NOTE: blueprint updates are NOT partial -- every field omitted here reverts
+  # to its serializer default. The existing values below are repeated on purpose;
+  # dropping webauthn_stage in particular would disable passkey login.
+  - model: authentik_stages_identification.identificationstage
+    identifiers:
+      name: default-authentication-identification
+    attrs:
+      enrollment_flow: !Find [authentik_flows.flow, [slug, enrollment]]
+      user_fields:
+        - username
+        - email
+      case_insensitive_matching: true
+      show_matched_user: true
+      show_source_labels: false
+      pretend_user_exists: true
+      enable_remember_me: false
+      webauthn_stage: !Find [authentik_flows.stage, [name, passwordless-webauthn]]
