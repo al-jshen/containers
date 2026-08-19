@@ -157,4 +157,11 @@ entries:
       show_source_labels: false
       pretend_user_exists: true
       enable_remember_me: false
-      webauthn_stage: !Find [authentik_flows.stage, [name, passwordless-webauthn]]
+      # No webauthn_stage: with it set, the login page auto-fires a WebAuthn
+      # challenge on load. App webviews (pocket for seerr, etc) cannot do
+      # WebAuthn at all, so that always failed with "Authentication was
+      # cancelled or timed out" before the user could type anything.
+      webauthn_stage: null
+      # Passkey login is now a link to the passwordless flow instead: one tap in
+      # safari, and invisible to webview users who can only use a password.
+      passwordless_flow: !Find [authentik_flows.flow, [slug, passwordless-flow]]
