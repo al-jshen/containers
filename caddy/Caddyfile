@@ -94,6 +94,18 @@ notes-sync.jshen.net {
     }
 }
 
+aurum.jshen.net {
+    encode gzip
+    reverse_proxy aurum:8000
+    tls {
+    	issuer acme {
+    		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+    		disable_http_challenge
+    		disable_tlsalpn_challenge
+    	}
+    }
+}
+
 chat.jshen.net {
     encode gzip
     reverse_proxy open-webui:8080
