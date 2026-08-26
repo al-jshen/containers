@@ -46,6 +46,7 @@ Paths inside a snapshot use the container's view:
 |---|---|
 | `/backup/containers/...` | `/home/mushy/containers/...` |
 | `/backup/external/...` | `/external/backups/...` |
+| `/backup/music/...` | `/external/data/music/...` |
 | `/backup/paperless-media/...` | docker volume `paperless_media` |
 | `/backup/paperless-data/...` | docker volume `paperless_data` |
 
@@ -64,7 +65,9 @@ Paths inside a snapshot use the container's view:
 5. **vaultwarden**: restore `containers/vaultwarden` (live data), or use a dated
    archive from `external/vaultwarden`.
 6. **home assistant / notes(couchdb) / navidrome / calibre**: restore their
-   directories under `containers/` and `docker compose up -d`.
+   directories under `containers/` and `docker compose up -d`. Navidrome's
+   library is not one of them -- it lives at `/backup/music` in the snapshot
+   and belongs back at `/external/data/music`.
 
 Databases come from the `.sql` dumps, never from copied files -- a file-level
 copy of a running postgres is usually unrestorable.

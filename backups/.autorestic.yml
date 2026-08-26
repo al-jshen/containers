@@ -12,6 +12,7 @@ locations:
     from:
       - /backup/containers
       - /backup/external
+      - /backup/music
       - /backup/paperless-media
       - /backup/paperless-data
     to: b2

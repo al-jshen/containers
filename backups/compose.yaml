@@ -14,6 +14,7 @@ services:
       # sources are read-only: a bug in here can never write to your data
       - /home/mushy/containers:/backup/containers:ro
       - /external/backups:/backup/external:ro
+      - /external/data/music:/backup/music:ro
       - paperless_media:/backup/paperless-media:ro
       - paperless_data:/backup/paperless-data:ro
 
