@@ -178,18 +178,6 @@ views:
             grid_options:
               columns: 6
 
-          # Turn this OFF before adjusting the thermostat at the wall or in the
-          # ecobee app -- otherwise the guard automation reverts your change.
-          - type: tile
-            entity: input_boolean.thermostat_guard
-            name: FlexPower Guard
-            icon: mdi:shield-home
-            features_position: inline
-            features:
-              - type: toggle
-            grid_options:
-              columns: full
-
       - type: grid
         cards:
           - type: heading

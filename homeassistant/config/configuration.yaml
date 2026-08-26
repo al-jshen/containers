@@ -10,14 +10,6 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
-# Master switch for the FlexPower setpoint guard automation. Turn this OFF before
-# changing the thermostat at the wall or in the ecobee app, otherwise the
-# automation will read your change as a utility push and revert it.
-input_boolean:
-  thermostat_guard:
-    name: Thermostat Guard
-    icon: mdi:shield-home
-
 # Combined draw of the three smart plugs, shown on the dashboard.
 template:
   - sensor:
