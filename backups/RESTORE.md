@@ -64,7 +64,11 @@ Paths inside a snapshot use the container's view:
    `/external/backups/paperless_export`.
 5. **vaultwarden**: restore `containers/vaultwarden` (live data), or use a dated
    archive from `external/vaultwarden`.
-6. **home assistant / notes(couchdb) / navidrome / calibre**: restore their
+6. **aurum**: do not start from the restored `containers/aurum/data/aurum.db`
+   -- it is a copy of a live WAL-mode file. Take the newest
+   `containers/aurum/data/backups/aurum-*.tar.gz` (a verified snapshot, written
+   nightly just before the offsite run) and follow `aurum/docs/RESTORE.md`.
+7. **home assistant / notes(couchdb) / navidrome / calibre**: restore their
    directories under `containers/` and `docker compose up -d`. Navidrome's
    library is not one of them -- it lives at `/backup/music` in the snapshot
    and belongs back at `/external/data/music`.

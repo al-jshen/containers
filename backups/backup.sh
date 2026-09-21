@@ -32,7 +32,32 @@ dump_pg() {
 dump_pg authentik-postgresql-1 authentik authentik authentik.sql
 dump_pg paperless-db-1        paperless paperless paperless.sql
 
+# aurum is sqlite in WAL mode: aurum.db on its own is missing whatever is still
+# in aurum.db-wal, and a copy taken mid-write can open cleanly and be short.
+# Its own script takes a consistent snapshot (VACUUM INTO), tars it with the
+# uploads, verifies the archive and keeps the newest 7 in aurum/data/backups,
+# which autorestic then picks up with the rest of containers/.
+#
+# Not fatal, unlike the dumps above: the live file still goes offsite and is
+# usually restorable, so one service's snapshot failing should not cost every
+# other service its nightly backup. The run is still marked failed at the end.
+warnings=0
+snapshot_aurum() {
+    local out
+    log "snapshotting aurum"
+    if out=$( (cd ../aurum && docker compose run --rm -T aurum scripts/backup.sh) 2>&1 ); then
+        log "aurum snapshot: $(printf '%s\n' "$out" | tail -n 1)"
+    else
+        log "WARNING: aurum snapshot failed, backing up the live file only"
+        printf '%s\n' "$out" | tail -n 5
+        warnings=$((warnings + 1))
+    fi
+}
+
+snapshot_aurum
+
 log "running autorestic"
 docker compose run --rm autorestic autorestic -c /data/.autorestic.yml --ci backup -a
 
+[ "$warnings" -eq 0 ] || fail "offsite backup ran, but $warnings step(s) above did not -- see WARNING"
 log "backup completed"
