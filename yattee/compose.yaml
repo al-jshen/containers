@@ -1,0 +1,18 @@
+services:
+  yattee-server:
+    image: yattee/yattee-server:latest
+    container_name: yattee-server
+    # the vps reverse proxy reaches this over tailscale at substrate:10002
+    ports:
+      - 10002:8085
+    volumes:
+      - ./downloads:/downloads
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy_net
+    external: true
