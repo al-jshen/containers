@@ -128,6 +128,7 @@ services:
       timeout: 1s
       retries: 10
       start_period: 2s
+    restart: unless-stopped
     networks:
       - caddy
 
