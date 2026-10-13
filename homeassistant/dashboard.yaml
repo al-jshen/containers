@@ -29,10 +29,6 @@ views:
     max_columns: 2
     badges:
       - type: entity
-        entity: weather.forecast_home
-        name: Outside
-        state_content: temperature
-      - type: entity
         entity: sensor.living_room_ecobee_current_temperature
         name: Inside
       - type: entity
@@ -177,22 +173,6 @@ views:
                 entity_id: button.living_room_ecobee_clear_hold
             grid_options:
               columns: 6
-
-      - type: grid
-        cards:
-          - type: heading
-            heading: Today
-            heading_style: title
-            icon: mdi:white-balance-sunny
-
-          - type: weather-forecast
-            entity: weather.forecast_home
-            forecast_type: daily
-            show_current: true
-            show_forecast: true
-
-          - type: todo-list
-            entity: todo.shopping_list
 
   - title: Energy
     path: energy
