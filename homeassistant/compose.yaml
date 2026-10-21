@@ -12,3 +12,6 @@ services:
     privileged: true
     # Host networking is required for mDNS/zeroconf discovery (Ecobee)
     network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
