@@ -27,3 +27,4 @@ backups/.autorestic.lock.yml
 llm/data
 aurum
 yattee/data
+hydra-server/data
